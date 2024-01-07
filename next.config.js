@@ -1,8 +1,24 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const NextConfig = {
   experimental: {
     appDir: true,
   },
+  
 }
 
-module.exports = nextConfig
+module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.themoviedb.org',
+        port: '3001',
+        pathname: '/components/MovieCard.tsx',
+      },
+    ],
+  },
+}
+
+module.exports = NextConfig
+
+
