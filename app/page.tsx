@@ -1,6 +1,6 @@
 'use client'
 import MovieCard from '@/components/MovieCard'
-// import FetchFromApi  from '@/utils/FetchFromApi'
+import FetchFromApi  from '@/utils/FetchFromApi'
 import { useEffect, useState } from 'react'
 import {useSession, signOut} from 'next-auth/react'
 
@@ -11,15 +11,17 @@ export default function Home() {
   const [popularShows, setPopularShows] = useState([])
   // const[videos, setVideos] = useState([])
 
-  // useEffect(() => {
+  console.log("hello")
 
-  //   const fetchUrl = async() => {
-  //     const {data} = await FetchFromApi.get('tv/popular')
-  //     setPopularShows(data.results)
-  //   }
+  useEffect(() => {
+    const fetchUrl = async() => {
+      const {data} = await FetchFromApi.get('tv/popular')
+      setPopularShows(data?.results)
+    }
 
-  //   fetchUrl()
-  // })
+    fetchUrl()
+  })
+
 
   return (
     <div>
