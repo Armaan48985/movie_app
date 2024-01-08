@@ -1,8 +1,6 @@
 'use client'
 import MovieCard from '@/components/MovieCard'
 import FetchFromApi  from '@/utils/FetchFromApi'
-import axios from 'axios'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import {useSession, signOut} from 'next-auth/react'
 

@@ -3,7 +3,6 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
-// import { SessionProvider } from 'next-auth/react'
 import SessionProvider from './SessionProvider'
 import Login from '@/components/Login'
 import Home from './page'
@@ -22,7 +21,7 @@ export default async function RootLayout({
 }) {
 
   const session = await getServerSession(authOptions)
-  
+
   return (
     <html lang="en">
       <body className={inter.className}>
