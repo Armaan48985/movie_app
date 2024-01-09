@@ -1,11 +1,19 @@
 import { getServerActionDispatcher } from 'next/dist/client/components/app-router'
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Inter, Poppins } from 'next/font/google'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import SessionProvider from './SessionProvider'
 import Login from '@/components/Login'
 import Home from './page'
+
+// import { Poppins } from 'next/font/google'
+ 
+const poppins = Poppins({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 const inter = Inter({ subsets: ['latin'] })
 
