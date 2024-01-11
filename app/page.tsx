@@ -17,6 +17,7 @@ interface UserData {
   id: string;
   name: string;
   email: string;
+  userName: string;
   // ... add other fields as per your actual data structure
 }
 
@@ -38,7 +39,7 @@ export default function Home() {
 
     useEffect(() => {
         async function fetchData(){
-          const data = await fetchDataFromFireStore();
+          const data = await fetchDataFromFireStore();const filteredData = await fetchDataFromFireStore();
           setUserData(data) 
         }
         fetchData()
@@ -57,7 +58,7 @@ export default function Home() {
                   <DropdownMenuItem>Empty List</DropdownMenuItem>
                   :
                 userData.map((e,i) => (
-                 <DropdownMenuItem key={i}>{JSON.stringify(e.name)}</DropdownMenuItem>    
+                 <DropdownMenuItem key={i}>{JSON.stringify(e.name)} by {e.userName}</DropdownMenuItem>    
                 ))}
                 
                 </DropdownMenuContent>

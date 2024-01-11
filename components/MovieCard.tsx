@@ -6,6 +6,7 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { db } from '@/app/firebaseConfig';
 import { doc, deleteDoc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { useSession } from 'next-auth/react';
 
 
 const postUrl = (url:string) => {
@@ -13,10 +14,12 @@ const postUrl = (url:string) => {
 }
 
 
-async function addDataToFireStore(name:any){
+async function addDataToFireStore(name:any, userName:any){
   try{
+
     const docRef = await setDoc(doc(db, "message", name), {
       name: name,
+      userName: userName || "", 
     })
     return true;
   }
@@ -36,13 +39,18 @@ async function removeDataFromFireStore(name:any){
   }
 }
 
-export async function fetchDataFromFireStore() {
+export async function fetchDataFromFireStore(filterCondition?: (docData: any) => boolean) {
   try {
-    const querySnapshot = await getDocs(collection(db, 'message')); // Replace 'your_collection_name' with the actual name of your collection
+    const querySnapshot = await getDocs(collection(db, 'message'));
 
     const data: any[] = [];
     querySnapshot.forEach((doc) => {
-      data.push({ id: doc.id, ...doc.data() });
+      const docData = doc.data();
+
+      // Apply the filter condition, if provided
+      if (!filterCondition || filterCondition(docData)) {
+        data.push({ id: doc.id, ...docData });
+      }
     });
 
     return data;
@@ -51,6 +59,8 @@ export async function fetchDataFromFireStore() {
     return [];
   }
 }
+
+
 interface UserData {
   id: string;
   name: string;
@@ -62,7 +72,9 @@ interface UserData {
     const [bookmark, setBookmark] = useState(false)
     const [name, setName] = useState("")
     const [userData, setUserData] = useState<UserData[]>([]);
-
+    const session = useSession();
+    const userName = session?.data?.user?.name;
+      
     useEffect(() => {
       async function fetchData(){
         const data = await fetchDataFromFireStore();
@@ -74,7 +86,7 @@ interface UserData {
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
-    await addDataToFireStore(name)
+    await addDataToFireStore(name, userName)
     !luffy && window.location.reload()
     setName("")
   }
