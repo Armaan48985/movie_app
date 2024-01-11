@@ -59,7 +59,7 @@ export default function Home() {
                 userData
                   .filter(e => e.userName == session?.data?.user?.name)
                   .map((e,i) => (
-                 <DropdownMenuItem key={i}>{JSON.stringify(e.name)} by {e.userName}</DropdownMenuItem>    
+                 <DropdownMenuItem key={i}>{JSON.stringify(e.name)}</DropdownMenuItem>    
                 ))}
                 
                 </DropdownMenuContent>
