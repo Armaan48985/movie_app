@@ -62,22 +62,24 @@ interface UserData {
     const [bookmark, setBookmark] = useState(false)
     const [name, setName] = useState("")
     const [userData, setUserData] = useState<UserData[]>([]);
+
+    useEffect(() => {
+      async function fetchData(){
+        const data = await fetchDataFromFireStore();
+        setUserData(data) 
+      }
+      fetchData()
+    }, [])
     let luffy = userData.some((user) => user.name === original_name);
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
+    await addDataToFireStore(name)
     !luffy && window.location.reload()
-    !luffy ? addDataToFireStore(name) : removeDataFromFireStore(name);
     setName("")
   }
 
-  useEffect(() => {
-    async function fetchData(){
-      const data = await fetchDataFromFireStore();
-      setUserData(data) 
-    }
-    fetchData()
-  }, [])
+ 
 
   return (
     <div>
