@@ -45,7 +45,6 @@ export default function Home() {
         fetchData()
       }, [])
 
-
   return (
     <div className={`w-full min-h-screen bg-black ${roboto.className} text-white`}>
       <div className='flex justify-between items-center text-white p-8 mx-10 py-10 pt-[4rem]'>
@@ -57,7 +56,9 @@ export default function Home() {
                 {userData.length == 0 ? 
                   <DropdownMenuItem>Empty List</DropdownMenuItem>
                   :
-                userData.map((e,i) => (
+                userData
+                  .filter(e => e.userName == session?.data?.user?.name)
+                  .map((e,i) => (
                  <DropdownMenuItem key={i}>{JSON.stringify(e.name)} by {e.userName}</DropdownMenuItem>    
                 ))}
                 
