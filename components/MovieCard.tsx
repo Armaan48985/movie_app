@@ -5,7 +5,7 @@ import { MdStarRate } from "react-icons/md";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { db } from '@/app/firebaseConfig';
-import { doc, deleteDoc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, deleteDoc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 
 
 const postUrl = (url:string) => {
@@ -35,26 +35,36 @@ async function removeDataFromFireStore(name:any){
   }
 }
 
-// export async function fetchDataFromFireStore(){
-//   const querySnapshot = await getDoc(doc(db, "name"))
+export async function fetchDataFromFireStore() {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'message')); // Replace 'your_collection_name' with the actual name of your collection
 
-//   const data:any = []
-//   querySnapshot.forEach((doc:any) => {
-//     data.push({id:doc.id, ...doc.data()})
-//   })
-//   return data;
-// }
+    const data: any[] = [];
+    querySnapshot.forEach((doc) => {
+      data.push({ id: doc.id, ...doc.data() });
+    });
 
-const MovieCard = ({original_name, poster_path, overview, vote_average}:any) => {
+    return data;
+  } catch (error) {
+    console.error('Error fetching data from Firestore:', error);
+    return [];
+  }
+}
+
+  const MovieCard = ({original_name, poster_path, overview, vote_average}:any) => {
 
   const [bookmark, setBookmark] = useState(false)
   const [name, setName] = useState("")
 
+
   const handleSubmit = async (e:any) => {
     e.preventDefault();
+    window.location.reload()
     await bookmark ? addDataToFireStore(name) : removeDataFromFireStore(name);
     setName("")
   }
+
+   
 
   return (
     <div>
@@ -79,6 +89,7 @@ const MovieCard = ({original_name, poster_path, overview, vote_average}:any) => 
 
        </div>
         <p className='w-[200px] text-sm text-gray-400'>{overview.slice(0,100)}...</p>
+       
     </div>
   )
 }

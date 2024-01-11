@@ -1,5 +1,5 @@
 'use client'
-import MovieCard from '@/components/MovieCard'
+import MovieCard, { fetchDataFromFireStore } from '@/components/MovieCard'
 import FetchFromApi  from '@/utils/FetchFromApi'
 import { useEffect, useState } from 'react'
 import {useSession, signOut} from 'next-auth/react'
@@ -13,14 +13,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  // ... add other fields as per your actual data structure
+}
 
 export default function Home() {
 
   const session = useSession()
 
   const [popularShows, setPopularShows] = useState([])
-  const [userData, setUserData] = useState([])
+  const [userData, setUserData] = useState<UserData[]>([]);
 
   useEffect(() => {
     const fetchUrl = async() => {
@@ -31,28 +36,29 @@ export default function Home() {
     fetchUrl()
   })
 
-  // useEffect(() => {
-  //   async function fetchData(){
-  //     const data = await fetchDataFromFireStore();
-  //     setUserData(data) 
-  //   }
-  //   fetchData()
-  // }, [])
+
+  useEffect(() => {
+    async function fetchData(){
+      const data = await fetchDataFromFireStore();
+      setUserData(data) 
+    }
+    fetchData()
+  }, [])
+
 
 
   return (
     <div className={`w-full min-h-screen bg-black ${roboto.className} text-white`}>
       <div className='flex justify-between items-center text-white p-8 mx-10 py-10 pt-[4rem]'>
-      <h1 className='text-8xl text-slate-50'>Welcome <span className='text-slate-300'>{session?.data?.user?.name}</span> ! </h1>
+      <h1 className='text-8xl text-slate-50'>Welcome <span className='text-[#FFD700]'>{session?.data?.user?.name}</span> ! </h1>
         <div className='flex gap-14 justify-center items-center outline-none border-none'>
               <DropdownMenu>
                 <DropdownMenuTrigger>Bookmarks</DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  {userData.length != 0 ? userData.map((user:any) => {
-                    return (
-                    <DropdownMenuItem>{user}</DropdownMenuItem>
-                    )
-                  }) :  <DropdownMenuItem>This is empty</DropdownMenuItem>}       
+                {userData.map((e,i) => (
+                 <DropdownMenuItem key={i}>{JSON.stringify(e.name)}</DropdownMenuItem>    
+                ))}
+                
                 </DropdownMenuContent>
               </DropdownMenu>
 
