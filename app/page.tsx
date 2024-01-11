@@ -36,15 +36,13 @@ export default function Home() {
     fetchUrl()
   })
 
-
-  useEffect(() => {
-    async function fetchData(){
-      const data = await fetchDataFromFireStore();
-      setUserData(data) 
-    }
-    fetchData()
-  }, [])
-
+    useEffect(() => {
+        async function fetchData(){
+          const data = await fetchDataFromFireStore();
+          setUserData(data) 
+        }
+        fetchData()
+      }, [])
 
 
   return (
@@ -55,7 +53,10 @@ export default function Home() {
               <DropdownMenu>
                 <DropdownMenuTrigger>Bookmarks</DropdownMenuTrigger>
                 <DropdownMenuContent>
-                {userData.map((e,i) => (
+                {userData.length == 0 ? 
+                  <DropdownMenuItem>Empty List</DropdownMenuItem>
+                  :
+                userData.map((e,i) => (
                  <DropdownMenuItem key={i}>{JSON.stringify(e.name)}</DropdownMenuItem>    
                 ))}
                 

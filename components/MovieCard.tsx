@@ -29,6 +29,7 @@ async function removeDataFromFireStore(name:any){
   try{
     const docRef = await deleteDoc(doc(db, "message", name))
     return true;
+    alert('deleted')
   }
   catch{
     return false;
@@ -50,21 +51,34 @@ export async function fetchDataFromFireStore() {
     return [];
   }
 }
-
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  // ... add other fields as per your actual data structure
+}
   const MovieCard = ({original_name, poster_path, overview, vote_average}:any) => {
-
-  const [bookmark, setBookmark] = useState(false)
-  const [name, setName] = useState("")
-
+    
+    const [bookmark, setBookmark] = useState(false)
+    const [name, setName] = useState("")
+    const [userData, setUserData] = useState<UserData[]>([]);
+    let luffy = userData.some((user) => user.name === original_name);
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
-    window.location.reload()
-    await bookmark ? addDataToFireStore(name) : removeDataFromFireStore(name);
+    !luffy && window.location.reload()
+    await !luffy ? addDataToFireStore(name) : removeDataFromFireStore(name);
     setName("")
   }
 
-   
+  useEffect(() => {
+    async function fetchData(){
+      const data = await fetchDataFromFireStore();
+      setUserData(data) 
+    }
+    fetchData()
+  }, [])
+console.log(luffy)
 
   return (
     <div>
@@ -84,7 +98,7 @@ export async function fetchDataFromFireStore() {
           <button onClick={() => {
             setName(original_name)
             setBookmark(e => !e)
-          }} className='text-2xl' type='submit'>{bookmark ? <IoBookmark/> : <IoBookmarkOutline/>}</button>
+          }} className='text-2xl' type='submit'>{luffy ? <IoBookmark/> : <IoBookmarkOutline/>}</button>
         </form>
 
        </div>
