@@ -65,6 +65,7 @@ interface UserData {
   id: string;
   name: string;
   email: string;
+  userName: string;
   // ... add other fields as per your actual data structure
 }
   const MovieCard = ({original_name, poster_path, overview, vote_average}:any) => {
@@ -82,14 +83,19 @@ interface UserData {
       }
       fetchData()
     }, [])
+    
+    useEffect(() => {
+      userData.filter(e => e.userName == session?.data?.user?.name)
+    },[])
+
     let luffy = userData.some((user) => user.name === original_name);
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     await addDataToFireStore(name, userName)
     !luffy && window.location.reload()
-    setName("")
   }
+
 
  
 
