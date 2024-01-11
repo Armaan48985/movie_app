@@ -67,7 +67,7 @@ interface UserData {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     !luffy && window.location.reload()
-    await !luffy ? addDataToFireStore(name) : removeDataFromFireStore(name);
+    !luffy ? addDataToFireStore(name) : removeDataFromFireStore(name);
     setName("")
   }
 
@@ -78,7 +78,6 @@ interface UserData {
     }
     fetchData()
   }, [])
-console.log(luffy)
 
   return (
     <div>
