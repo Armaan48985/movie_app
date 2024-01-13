@@ -5,7 +5,7 @@ import { MdStarRate } from "react-icons/md";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { db } from '@/app/firebaseConfig';
-import { doc, deleteDoc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, deleteDoc, setDoc, getDoc, collection, getDocs, addDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 
 
@@ -14,52 +14,48 @@ const postUrl = (url:string) => {
 }
 
 
-async function addDataToFireStore(name:any, userName:any){
-  try{
 
-    const docRef = await setDoc(doc(db, "message", name), {
-      name: name,
-      userName: userName || "", 
-    })
-    return true;
-  }
-  catch{
-    return false;
-  }
-}
-
-async function removeDataFromFireStore(name:any){
-  try{
-    const docRef = await deleteDoc(doc(db, "message", name))
-    return true;
-    alert('deleted')
-  }
-  catch{
-    return false;
-  }
-}
-
-export async function fetchDataFromFireStore(filterCondition?: (docData: any) => boolean) {
+async function addDataToFireStore(name:any, userName:any) {
   try {
-    const querySnapshot = await getDocs(collection(db, 'message'));
+    const userCollectionRef = collection(db, 'users');
 
-    const data: any[] = [];
-    querySnapshot.forEach((doc) => {
-      const docData = doc.data();
+    const userDocumentRef = doc(userCollectionRef, userName);
 
-      // Apply the filter condition, if provided
-      if (!filterCondition || filterCondition(docData)) {
-        data.push({ id: doc.id, ...docData });
-      }
+    const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
+
+    // Add the movie data to the bookmarks subcollection
+    const docRef = await addDoc(bookmarksCollectionRef,{
+      name: name,
     });
-
-    return data;
+    return true;
   } catch (error) {
+    console.error('Error adding data to Firestore:', error);
+    return false;
+  }
+}
+
+export async function fetchDataFromFireStore(userName?: string, filterCondition?: (docData: any) => boolean) {
+  try {
+      const userCollectionRef = collection(db, 'users');
+      const userDocumentRef = doc(userCollectionRef, 'naruto');
+      const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
+
+   
+      const querySnapshot = await getDocs(bookmarksCollectionRef);
+
+      const data: any[] = [];
+      querySnapshot.forEach((doc) => {
+        const docData = doc.data();
+          data.push({ id: doc.id, ...docData });
+      
+      });
+      return data;
+    } 
+  catch (error) {
     console.error('Error fetching data from Firestore:', error);
     return [];
   }
 }
-
 
 interface UserData {
   id: string;
@@ -75,6 +71,7 @@ interface UserData {
     const [userData, setUserData] = useState<UserData[]>([]);
     const session = useSession();
     const userName = session?.data?.user?.name;
+    let luffy = userData.some((user) => user.name === original_name);
       
     useEffect(() => {
       async function fetchData(){
@@ -82,22 +79,18 @@ interface UserData {
         setUserData(data) 
       }
       fetchData()
-    }, [])
+    }, [luffy])
     
     useEffect(() => {
       userData.filter(e => e.userName == session?.data?.user?.name)
     },[])
 
-    let luffy = userData.some((user) => user.name === original_name);
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     await addDataToFireStore(name, userName)
-    !luffy && window.location.reload()
+    window.location.reload()
   }
-
-
- 
 
   return (
     <div>
