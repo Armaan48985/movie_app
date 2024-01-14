@@ -18,7 +18,7 @@ const postUrl = (url:string) => {
 async function addDataToFireStore(name:any, userName:any) {
   try {
     const userCollectionRef = collection(db, 'users');
-    const userDocumentRef = doc(userCollectionRef, userName || "naruto");
+    const userDocumentRef = doc(userCollectionRef, userName);
     const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
     const movieDocumentRef = doc(bookmarksCollectionRef, name);
     
@@ -35,7 +35,7 @@ async function addDataToFireStore(name:any, userName:any) {
 async function DeleteDataFromFireStore(userName:any, name:any) {
   try {
     const userCollectionRef = collection(db, 'users');
-    const userDocumentRef = doc(userCollectionRef, userName|| "naruto");
+    const userDocumentRef = doc(userCollectionRef, userName);
     const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
     const docRef = doc(bookmarksCollectionRef, name)
 
@@ -51,7 +51,7 @@ async function DeleteDataFromFireStore(userName:any, name:any) {
 export async function fetchDataFromFireStore(userName?: string, filterCondition?: (docData: any) => boolean) {
   try {
       const userCollectionRef = collection(db, 'users');
-      const userDocumentRef = doc(userCollectionRef, userName || "naruto");
+      const userDocumentRef = doc(userCollectionRef, userName);
       const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
   
       const querySnapshot = await getDocs(bookmarksCollectionRef);
@@ -86,7 +86,7 @@ interface UserData {
     const userName = session?.data?.user?.name;
     
     //check of all the names in userData and see if it matches the original_name  
-    let luffy = userData.some((e) => e.name == original_name)  
+    let luffy = userData.some(e => e.name === original_name)
 
 
     useEffect(() => {
@@ -95,16 +95,13 @@ interface UserData {
         setUserData(data) 
       }
       fetchData()
-    }, [])
-
-  
+    }, [name])
 
     const handleSubmit = async (e:any) => {
       e.preventDefault();
       !luffy ? await addDataToFireStore(name, userName) : await DeleteDataFromFireStore(userName, name)
       setUserData(await fetchDataFromFireStore());
     }
-
 
 
   return (

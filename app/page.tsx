@@ -34,13 +34,12 @@ export default function Home() {
       const {data} = await FetchFromApi.get('tv/popular')
       setPopularShows(data?.results)
     }
-
     fetchUrl()
   })
 
     useEffect(() => {
         async function fetchData(){
-          const data = await fetchDataFromFireStore();const filteredData = await fetchDataFromFireStore();
+          const data = await fetchDataFromFireStore();
           setUserData(data) 
         }
         fetchData()
