@@ -42,7 +42,7 @@ async function DeleteDataFromFireStore(userName:any, name:any) {
     await deleteDoc(docRef);
     return true;
   } catch (error) {
-    console.error('Error adding data to Firestore:', error);
+    console.error('Error deleting data from Firestore:', error);
     return false;
   }
 }
@@ -82,8 +82,8 @@ interface UserData {
     const [userData, setUserData] = useState<UserData[]>([]);
     const session = useSession();
     const userName = session?.data?.user?.name;
-    
-    //check of all the names in userData and see if it matches the original_name  
+
+
     let luffy = userData.some(e => e.name === original_name)
 
 
@@ -93,7 +93,7 @@ interface UserData {
         setUserData(data) 
       }
       fetchData()
-    }, [name])
+    }, [userData])
 
     const handleSubmit = async (e:any) => {
       e.preventDefault();
