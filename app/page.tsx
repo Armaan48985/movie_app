@@ -39,7 +39,7 @@ export default function Home() {
 
     useEffect(() => {
         async function fetchData(){
-          const data = await fetchDataFromFireStore();
+          const data = await fetchDataFromFireStore(userName);
           setUserData(data) 
         }
         fetchData()
@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <div className={`w-full min-h-screen bg-black ${roboto.className} text-white`}>
       <div className='flex justify-between items-center text-white p-8 mx-10 py-10 pt-[4rem]'>
-      <h1 className='text-8xl text-slate-50'>Welcome <span className='text-[#FFD700]'>{userName ? userName : "Naruto"}</span> ! </h1>
+      <h1 className='text-8xl text-slate-50'>Welcome <span className='text-[#FFD700]'>{userName}</span> ! </h1>
         <div className='flex gap-14 justify-center items-center outline-none border-none'>
               <DropdownMenu>
                 <DropdownMenuTrigger>Bookmarks</DropdownMenuTrigger>
@@ -57,9 +57,8 @@ export default function Home() {
                   <DropdownMenuItem>Empty List</DropdownMenuItem>
                   :
                 userData
-                  .filter(e => e.userName == userName)
                   .map((e,i) => (
-                 <DropdownMenuItem key={i}>{JSON.stringify(e.name)} by {e.userName || "naruto"}</DropdownMenuItem>    
+                 <DropdownMenuItem key={i}>{JSON.stringify(e.name)}</DropdownMenuItem>    
                 ))}
                 
                 </DropdownMenuContent>

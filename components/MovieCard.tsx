@@ -5,7 +5,7 @@ import { MdStarRate } from "react-icons/md";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { db } from '@/app/firebaseConfig';
-import { doc, deleteDoc, setDoc, getDoc, collection, getDocs, addDoc } from 'firebase/firestore';
+import { doc, deleteDoc, setDoc, getDoc, collection, getDocs, addDoc, updateDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 
 
@@ -18,11 +18,11 @@ const postUrl = (url:string) => {
 async function addDataToFireStore(name:any, userName:any) {
   try {
     const userCollectionRef = collection(db, 'users');
-    const userDocumentRef = doc(userCollectionRef, userName);
+    const userDocumentRef = doc(userCollectionRef, userName || "naruto");
     const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
     const movieDocumentRef = doc(bookmarksCollectionRef, name);
     
-    await setDoc(movieDocumentRef, {name})
+    await setDoc(movieDocumentRef, {name, bookmarked: false})
 
 
     return true;
@@ -35,12 +35,11 @@ async function addDataToFireStore(name:any, userName:any) {
 async function DeleteDataFromFireStore(userName:any, name:any) {
   try {
     const userCollectionRef = collection(db, 'users');
-    const userDocumentRef = doc(userCollectionRef, userName);
+    const userDocumentRef = doc(userCollectionRef, userName || "naruto");
     const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
     const docRef = doc(bookmarksCollectionRef, name)
 
     await deleteDoc(docRef);
-    alert('deleted')
     return true;
   } catch (error) {
     console.error('Error adding data to Firestore:', error);
@@ -48,10 +47,10 @@ async function DeleteDataFromFireStore(userName:any, name:any) {
   }
 }
 
-export async function fetchDataFromFireStore(userName?: string, filterCondition?: (docData: any) => boolean) {
+export async function fetchDataFromFireStore(userName:any) {
   try {
       const userCollectionRef = collection(db, 'users');
-      const userDocumentRef = doc(userCollectionRef, userName);
+      const userDocumentRef = doc(userCollectionRef, userName || "naruto");
       const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
   
       const querySnapshot = await getDocs(bookmarksCollectionRef);
@@ -79,9 +78,9 @@ interface UserData {
 }
   const MovieCard = ({original_name, poster_path, overview, vote_average}:any) => {
     
-    const [bookmark, setBookmark] = useState(false)
     const [name, setName] = useState("")
     const [userData, setUserData] = useState<UserData[]>([]);
+    const [bookmark, setBookmark] = useState(false)
     const session = useSession();
     const userName = session?.data?.user?.name;
     
@@ -91,7 +90,7 @@ interface UserData {
 
     useEffect(() => {
       async function fetchData(){
-        const data = await fetchDataFromFireStore();
+        const data = await fetchDataFromFireStore(userName);
         setUserData(data) 
       }
       fetchData()
@@ -100,7 +99,7 @@ interface UserData {
     const handleSubmit = async (e:any) => {
       e.preventDefault();
       !luffy ? await addDataToFireStore(name, userName) : await DeleteDataFromFireStore(userName, name)
-      setUserData(await fetchDataFromFireStore());
+      setUserData(await fetchDataFromFireStore(userName));
     }
 
 
