@@ -18,7 +18,7 @@ const postUrl = (url:string) => {
 async function addDataToFireStore(name:any, userName:any) {
   try {
     const userCollectionRef = collection(db, 'users');
-    const userDocumentRef = doc(userCollectionRef, userName || "naruto");
+    const userDocumentRef = doc(userCollectionRef, userName);
     const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
     const movieDocumentRef = doc(bookmarksCollectionRef, name);
     
@@ -35,7 +35,7 @@ async function addDataToFireStore(name:any, userName:any) {
 async function DeleteDataFromFireStore(userName:any, name:any) {
   try {
     const userCollectionRef = collection(db, 'users');
-    const userDocumentRef = doc(userCollectionRef, userName || "naruto");
+    const userDocumentRef = doc(userCollectionRef, userName);
     const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
     const docRef = doc(bookmarksCollectionRef, name)
 
@@ -50,7 +50,7 @@ async function DeleteDataFromFireStore(userName:any, name:any) {
 export async function fetchDataFromFireStore(userName:any) {
   try {
       const userCollectionRef = collection(db, 'users');
-      const userDocumentRef = doc(userCollectionRef, userName || "naruto");
+      const userDocumentRef = doc(userCollectionRef, userName);
       const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
   
       const querySnapshot = await getDocs(bookmarksCollectionRef);
@@ -80,7 +80,6 @@ interface UserData {
     
     const [name, setName] = useState("")
     const [userData, setUserData] = useState<UserData[]>([]);
-    const [bookmark, setBookmark] = useState(false)
     const session = useSession();
     const userName = session?.data?.user?.name;
     
@@ -120,7 +119,6 @@ interface UserData {
         <form onSubmit={handleSubmit}>
           <button onClick={() => {
             setName(original_name)
-            setBookmark(e => !e)
           }} className='text-2xl' type='submit'>{luffy ? <IoBookmark/> : <IoBookmarkOutline/>}</button>
         </form>
 

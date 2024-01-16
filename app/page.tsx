@@ -43,7 +43,7 @@ export default function Home() {
           setUserData(data) 
         }
         fetchData()
-      }, [])
+      }, [userData])
 
   return (
     <div className={`w-full min-h-screen bg-black ${roboto.className} text-white`}>
