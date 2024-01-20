@@ -18,7 +18,7 @@ const postUrl = (url:string) => {
 async function addDataToFireStore(name:any, userName:any) {
   try {
     const userCollectionRef = collection(db, 'users');
-    const userDocumentRef = doc(userCollectionRef, userName);
+    const userDocumentRef = doc(userCollectionRef, userName || "naruto");
     const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
     const movieDocumentRef = doc(bookmarksCollectionRef, name);
     
@@ -35,7 +35,7 @@ async function addDataToFireStore(name:any, userName:any) {
 async function DeleteDataFromFireStore(userName:any, name:any) {
   try {
     const userCollectionRef = collection(db, 'users');
-    const userDocumentRef = doc(userCollectionRef, userName);
+    const userDocumentRef = doc(userCollectionRef, userName || "naruto");
     const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
     const docRef = doc(bookmarksCollectionRef, name)
 
@@ -50,7 +50,7 @@ async function DeleteDataFromFireStore(userName:any, name:any) {
 export async function fetchDataFromFireStore(userName:any) {
   try {
       const userCollectionRef = collection(db, 'users');
-      const userDocumentRef = doc(userCollectionRef, userName);
+      const userDocumentRef = doc(userCollectionRef, userName || "naruto");
       const bookmarksCollectionRef = collection(userDocumentRef, 'bookmarks');
   
       const querySnapshot = await getDocs(bookmarksCollectionRef);
