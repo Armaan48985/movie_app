@@ -7,6 +7,7 @@ import { IoBookmark } from "react-icons/io5";
 import { db } from '@/app/firebaseConfig';
 import { doc, deleteDoc, setDoc, getDoc, collection, getDocs, addDoc, updateDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 
 const postUrl = (url:string) => {
@@ -104,12 +105,19 @@ interface UserData {
 
   return (
     <div>
+        <Link
+            href={{
+                pathname: '/movie',    
+              }}    
+        >
         <img
          src={postUrl(poster_path)}
          alt='poster'
          width={200}
          height={200}
         />
+                      </Link>
+       
        <div className='flex justify-between items-center'>
           <div> 
             <h1 className='mt-4'>{original_name}</h1>
@@ -119,7 +127,7 @@ interface UserData {
         <form onSubmit={handleSubmit}>
           <button onClick={() => {
             setName(original_name)
-          }} className='text-2xl' type='submit'>{luffy ? <IoBookmark/> : <IoBookmarkOutline/>}</button>
+          }} className='text-2xl z-100' type='submit'>{luffy ? <IoBookmark/> : <IoBookmarkOutline/>}</button>
         </form>
 
        </div>

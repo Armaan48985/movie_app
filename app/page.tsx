@@ -127,15 +127,9 @@ export default function Home() {
             <div className='flex flex-wrap gap-20 justify-center items-center'>
             {currentTab === 'popularShows' && popularShows.length > 0 ? (
                     popularShows.map((data: any, index) => (
-                      <Link
-                        href={{
-                          pathname: '/movie',
-                          query: { ...data }, // Include all details from the data object
-                        }}
-                        key={index}
-                      >
+                    
                         <MovieCard {...data} />
-                      </Link>
+                     
                     ))
                   ) : currentTab === 'ratedShows' && ratedShows.length > 0 ? (
                     ratedShows.map((data: any, index) => (
